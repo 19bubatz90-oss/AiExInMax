@@ -10,20 +10,11 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Install Android SDK
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq wget unzip
-          export ANDROID_SDK_ROOT=$HOME/android-sdk
-          mkdir -p $ANDROID_SDK_ROOT
-          cd $ANDROID_SDK_ROOT
-          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
-          unzip -q cmdline-tools.zip
-          mkdir -p latest
-          mv cmdline-tools/* latest/
-          yes | $ANDROID_SDK_ROOT/latest/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --licenses > /dev/null 2>&1
-          $ANDROID_SDK_ROOT/latest/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platforms;android-34" "build-tools;34.0.0" > /dev/null 2>&1
-          echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platforms;android-34 build-tools;34.0.0'
+          accept-android-sdk-licenses: true
       - name: Create local.properties
         run: echo "sdk.dir=$ANDROID_HOME" > local.properties
       - name: Make gradlew executable
