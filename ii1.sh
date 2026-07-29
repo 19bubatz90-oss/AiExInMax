@@ -1,4 +1,3 @@
-cat > ~/GhostMax/bu.sh << 'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
 
@@ -7,33 +6,31 @@ APK_DEST="/storage/emulated/0/Download/GhostMax.apk"
 
 cd "$PROJECT_DIR"
 
-# SDK-Pfad ermitteln
+# SDK-Pfad
 if [ -f local.properties ]; then
     SDK_DIR=$(grep 'sdk.dir' local.properties | cut -d'=' -f2)
-elif [ -d "$HOME/android-sdk" ]; then
-    SDK_DIR="$HOME/android-sdk"
-elif [ -n "${ANDROID_HOME:-}" ]; then
-    SDK_DIR="$ANDROID_HOME"
-elif [ -n "${ANDROID_SDK_ROOT:-}" ]; then
-    SDK_DIR="$ANDROID_SDK_ROOT"
 else
-    SDK_DIR="$HOME/Android/Sdk"
+    SDK_DIR="$HOME/android-sdk"
+    [ -d "$SDK_DIR" ] || SDK_DIR="$HOME/Android/Sdk"
+    echo "sdk.dir=$SDK_DIR" > local.properties
 fi
-echo "sdk.dir=$SDK_DIR" > local.properties
 
-# Systemweites Gradle nutzen
-gradle assembleDebug
+# Wrapper-JAR
+mkdir -p gradle/wrapper
+if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then
+    wget -q https://github.com/gradle/gradle/raw/v8.4.0/gradle/wrapper/gradle-wrapper.jar \
+         -O gradle/wrapper/gradle-wrapper.jar
+fi
+chmod +x gradlew
 
-# APK kopieren
+# Build
+./gradlew assembleDebug
+
+# APK bereitstellen
 APK_SRC="app/build/outputs/apk/debug/app-debug.apk"
 cp "$APK_SRC" "$APK_DEST" 2>/dev/null || {
     mkdir -p "$(dirname "$APK_DEST")"
     cp "$APK_SRC" "$APK_DEST"
 }
 echo "✅ APK gespeichert unter: $APK_DEST"
-
-# Installation anstoßen
 command -v termux-open >/dev/null && termux-open "$APK_DEST"
-EOF
-chmod +x ~/GhostMax/bu.sh
-~/GhostMax/bu.sh

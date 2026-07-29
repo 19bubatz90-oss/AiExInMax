@@ -1,4 +1,3 @@
-cat > ~/GhostMax/bu.sh << 'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
 
@@ -34,6 +33,3 @@ echo "✅ APK gespeichert unter: $APK_DEST"
 
 # Installation anstoßen
 command -v termux-open >/dev/null && termux-open "$APK_DEST"
-EOF
-chmod +x ~/GhostMax/bu.sh
-~/GhostMax/bu.sh
