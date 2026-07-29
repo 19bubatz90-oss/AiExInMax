@@ -22,7 +22,7 @@ public class ApiClient {
         BUILTIN.put("DeepSeek API",new ProviderInfo("DeepSeek API","https://api.deepseek.com/v1/chat/completions","deepseek-chat","openai"));
         BUILTIN.put("Google",new ProviderInfo("Google","https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent","gemini-2.5-flash","gemini"));
     }
-    public static final String[] ALL_PROVIDERS = BUILTIN.keySet().toArray(new String[0]);
+    public static final String[] ALL_PROVIDERS = {"OpenRouter","Groq","Gemini","OpenAI","Anthropic","DeepSeek API","Google","LocalLLM"};
 
     public static class Result {
         public String text; public String actualProvider; public boolean isError;
@@ -102,7 +102,7 @@ public class ApiClient {
                 return obj.optString("content", "Keine Antwort");
             }
         } catch (Exception e) {
-            return "Lokaler Fehler: " + e.getMessage();
+            return "Fehler (Lokal): " + e.getMessage();
         }
     }
 
