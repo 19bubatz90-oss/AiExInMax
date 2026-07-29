@@ -298,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
     private String getDefaultModel(String prov) {
         switch (prov) {
             case "LocalLLM": return "";
-            case "OpenRouter": return "meta-llama/llama-3.3-70b-instruct:free";
+            case "OpenRouter": return "openai/gpt-oss-120b:free";
             case "Groq": return "llama-3.3-70b-versatile";
             case "Gemini": case "Google": return "gemini-2.5-flash";
             case "OpenAI": return "gpt-4o";

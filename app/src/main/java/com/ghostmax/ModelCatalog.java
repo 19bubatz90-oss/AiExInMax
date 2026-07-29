@@ -12,13 +12,13 @@ public class ModelCatalog {
     }
     public static List<ModelEntry> getAll() {
         List<ModelEntry> list = new ArrayList<>();
-        list.add(new ModelEntry("Llama 3.3 70B Instruct","OpenRouter","meta-llama/llama-3.3-70b-instruct:free","Chat","No Filter","Leistungsfähig, unzensiert",true,true,"https://openrouter.ai/api/v1"));
+        list.add(new ModelEntry("GPT-OSS 120B","OpenRouter","openai/gpt-oss-120b:free","Chat","No Filter","Aktuell kostenlos, stark, allgemein",true,true,"https://openrouter.ai/api/v1"));
         list.add(new ModelEntry("Dolphin 2.9.1 Mixtral","OpenRouter","cognitivecomputations/dolphin-2.9.1-mixtral-8x7b","Chat","No Filter","Flexibles Chat-Modell",true,true,"https://openrouter.ai/api/v1"));
         list.add(new ModelEntry("Mistral 7B Instruct","OpenRouter","mistralai/mistral-7b-instruct:free","Chat","No Filter","Leicht, schnell",true,true,"https://openrouter.ai/api/v1"));
         list.add(new ModelEntry("Phi-3.5 Mini","OpenRouter","microsoft/phi-3.5-mini-128k-instruct:free","Chat","No Filter","Klein, leistungsfähig",true,true,"https://openrouter.ai/api/v1"));
         list.add(new ModelEntry("Hermes 2 Pro","OpenRouter","nousresearch/hermes-2-pro-llama-3-8b","Chat","No Filter","Kreativ, Dialoge",true,true,"https://openrouter.ai/api/v1"));
         list.add(new ModelEntry("Mythomax","OpenRouter","gryphe/mythomax-l2-13b","Chat","No Filter","Rollenspiele",true,true,"https://openrouter.ai/api/v1"));
-        list.add(new ModelEntry("Qwen 2.5 72B","OpenRouter","qwen/qwen-2.5-72b-instruct:free","Chat","No Filter","Stark in vielen Bereichen",true,true,"https://openrouter.ai/api/v1"));
+        list.add(new ModelEntry("Qwen3 Coder","OpenRouter","qwen/qwen3-coder:free","Coding","No Filter","Aktuell kostenlos, starkes Coding-Modell, 1M Kontext",true,true,"https://openrouter.ai/api/v1"));
         list.add(new ModelEntry("DeepSeek V3","DeepSeek API","deepseek-chat","Coding","No Filter","Extrem stark im Coding",true,false,"https://api.deepseek.com/v1"));
         list.add(new ModelEntry("DeepSeek Coder V2","DeepSeek API","deepseek-coder","Coding","No Filter","Spezialisiert auf Code",true,false,"https://api.deepseek.com/v1"));
         list.add(new ModelEntry("Hermes 2 Pro (Creative)","OpenRouter","nousresearch/hermes-2-pro-llama-3-8b","Creative","No Filter","Kreatives Schreiben",true,true,"https://openrouter.ai/api/v1"));

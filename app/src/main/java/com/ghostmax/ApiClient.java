@@ -14,7 +14,7 @@ public class ApiClient {
     private static final Map<String,ProviderInfo> BUILTIN = new LinkedHashMap<>();
     static {
         BUILTIN.put("LocalLLM",new ProviderInfo("LocalLLM","http://127.0.0.1:8080/completion","","local"));
-        BUILTIN.put("OpenRouter",new ProviderInfo("OpenRouter","https://openrouter.ai/api/v1/chat/completions","meta-llama/llama-3.3-70b-instruct:free","openai"));
+        BUILTIN.put("OpenRouter",new ProviderInfo("OpenRouter","https://openrouter.ai/api/v1/chat/completions","openai/gpt-oss-120b:free","openai"));
         BUILTIN.put("Groq",new ProviderInfo("Groq","https://api.groq.com/openai/v1/chat/completions","llama-3.3-70b-versatile","openai"));
         BUILTIN.put("Gemini",new ProviderInfo("Gemini","https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent","gemini-2.5-flash","gemini"));
         BUILTIN.put("OpenAI",new ProviderInfo("OpenAI","https://api.openai.com/v1/chat/completions","gpt-4o","openai"));
