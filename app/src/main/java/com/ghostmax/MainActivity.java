@@ -223,6 +223,20 @@ public class MainActivity extends AppCompatActivity {
             EditText keyInput = new EditText(this); keyInput.setHint("API-Key"); keyInput.setText(prefs.getApiKey(prov));
             keyInput.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
             lay.addView(keyInput); keyInput.setTag(prov+"_key");
+            final String apiKeyUrl = getApiKeyUrl(prov);
+            if (!apiKeyUrl.isEmpty()) {
+                Button keyLinkBtn = new Button(this);
+                keyLinkBtn.setText("🔗 API-Key holen ("+prov+")");
+                keyLinkBtn.setTextSize(12);
+                keyLinkBtn.setOnClickListener(v -> {
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(apiKeyUrl)));
+                    } catch (Exception e) {
+                        Toast.makeText(this, "Kein Browser gefunden", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                lay.addView(keyLinkBtn);
+            }
             EditText urlInput = new EditText(this); urlInput.setHint("URL"); urlInput.setText(prefs.getProviderUrl(prov).isEmpty() ? getDefaultUrl(prov) : prefs.getProviderUrl(prov));
             lay.addView(urlInput); urlInput.setTag(prov+"_url");
             EditText modelInput = new EditText(this); modelInput.setHint("Modell"); modelInput.setText(prefs.getProviderModel(prov).isEmpty() ? getDefaultModel(prov) : prefs.getProviderModel(prov));
@@ -297,6 +311,19 @@ public class MainActivity extends AppCompatActivity {
             case "OpenAI": return "gpt-4o";
             case "Anthropic": return "claude-3-5-sonnet-20241022";
             case "DeepSeek API": return "deepseek-chat";
+            default: return "";
+        }
+    }
+
+    private String getApiKeyUrl(String prov) {
+        switch (prov) {
+            case "LocalLLM": return "";
+            case "OpenRouter": return "https://openrouter.ai/keys";
+            case "Groq": return "https://console.groq.com/keys";
+            case "Gemini": case "Google": return "https://aistudio.google.com/apikey";
+            case "OpenAI": return "https://platform.openai.com/api-keys";
+            case "Anthropic": return "https://console.anthropic.com/settings/keys";
+            case "DeepSeek API": return "https://platform.deepseek.com/api_keys";
             default: return "";
         }
     }
