@@ -218,29 +218,22 @@ public class MainActivity extends AppCompatActivity {
     private void showSettingsDialog() {
         ScrollView sc = new ScrollView(this);
         LinearLayout lay = new LinearLayout(this); lay.setOrientation(LinearLayout.VERTICAL); lay.setPadding(30,30,30,30);
+        TextView freeHeader = new TextView(this);
+        freeHeader.setText("🆓 Kostenlose Provider");
+        freeHeader.setTextSize(18); freeHeader.setPadding(0,10,0,10);
+        freeHeader.setTypeface(null, android.graphics.Typeface.BOLD);
+        lay.addView(freeHeader);
         for (String prov : ApiClient.ALL_PROVIDERS) {
-            TextView tv = new TextView(this); tv.setText("🔹 "+prov); tv.setTextSize(16); tv.setPadding(0,20,0,5); lay.addView(tv);
-            EditText keyInput = new EditText(this); keyInput.setHint("API-Key"); keyInput.setText(prefs.getApiKey(prov));
-            keyInput.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            lay.addView(keyInput); keyInput.setTag(prov+"_key");
-            final String apiKeyUrl = getApiKeyUrl(prov);
-            if (!apiKeyUrl.isEmpty()) {
-                Button keyLinkBtn = new Button(this);
-                keyLinkBtn.setText("🔗 API-Key holen ("+prov+")");
-                keyLinkBtn.setTextSize(12);
-                keyLinkBtn.setOnClickListener(v -> {
-                    try {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(apiKeyUrl)));
-                    } catch (Exception e) {
-                        Toast.makeText(this, "Kein Browser gefunden", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                lay.addView(keyLinkBtn);
-            }
-            EditText urlInput = new EditText(this); urlInput.setHint("URL"); urlInput.setText(prefs.getProviderUrl(prov).isEmpty() ? getDefaultUrl(prov) : prefs.getProviderUrl(prov));
-            lay.addView(urlInput); urlInput.setTag(prov+"_url");
-            EditText modelInput = new EditText(this); modelInput.setHint("Modell"); modelInput.setText(prefs.getProviderModel(prov).isEmpty() ? getDefaultModel(prov) : prefs.getProviderModel(prov));
-            lay.addView(modelInput); modelInput.setTag(prov+"_model");
+            if (isFreeProvider(prov)) addProviderSettingsRow(lay, prov);
+        }
+
+        TextView paidHeader = new TextView(this);
+        paidHeader.setText("💳 Kostenpflichtige Provider");
+        paidHeader.setTextSize(18); paidHeader.setPadding(0,20,0,10);
+        paidHeader.setTypeface(null, android.graphics.Typeface.BOLD);
+        lay.addView(paidHeader);
+        for (String prov : ApiClient.ALL_PROVIDERS) {
+            if (!isFreeProvider(prov)) addProviderSettingsRow(lay, prov);
         }
         TextView tempLabel = new TextView(this); tempLabel.setText("🌡️ Temperatur: "+prefs.getTemperature()); lay.addView(tempLabel);
         SeekBar tempBar = new SeekBar(this); tempBar.setMax(200); tempBar.setProgress((int)(prefs.getTemperature()*100));
@@ -313,6 +306,64 @@ public class MainActivity extends AppCompatActivity {
             case "DeepSeek API": return "deepseek-chat";
             default: return "";
         }
+    }
+
+    private boolean isFreeProvider(String prov) {
+        switch (prov) {
+            case "LocalLLM":
+            case "OpenRouter":
+            case "Groq":
+            case "Gemini":
+            case "Google":
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private String getApiKeyUrlSafe(String prov) {
+        try { return getApiKeyUrl(prov); } catch (Exception e) { return ""; }
+    }
+
+    private void addProviderSettingsRow(LinearLayout lay, String prov) {
+        TextView tv = new TextView(this);
+        tv.setText("🔹 " + prov + (isFreeProvider(prov) ? " (gratis)" : " (bezahlt)"));
+        tv.setTextSize(16); tv.setPadding(0,20,0,5);
+        lay.addView(tv);
+
+        EditText keyInput = new EditText(this);
+        keyInput.setHint("API-Key");
+        keyInput.setText(prefs.getApiKey(prov));
+        keyInput.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        lay.addView(keyInput);
+        keyInput.setTag(prov + "_key");
+
+        final String apiKeyUrl = getApiKeyUrlSafe(prov);
+        if (!apiKeyUrl.isEmpty()) {
+            Button keyLinkBtn = new Button(this);
+            keyLinkBtn.setText("🔗 API-Key holen (" + prov + ")");
+            keyLinkBtn.setTextSize(12);
+            keyLinkBtn.setOnClickListener(v -> {
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(apiKeyUrl)));
+                } catch (Exception e) {
+                    Toast.makeText(this, "Kein Browser gefunden", Toast.LENGTH_SHORT).show();
+                }
+            });
+            lay.addView(keyLinkBtn);
+        }
+
+        EditText urlInput = new EditText(this);
+        urlInput.setHint("URL");
+        urlInput.setText(prefs.getProviderUrl(prov).isEmpty() ? getDefaultUrl(prov) : prefs.getProviderUrl(prov));
+        lay.addView(urlInput);
+        urlInput.setTag(prov + "_url");
+
+        EditText modelInput = new EditText(this);
+        modelInput.setHint("Modell");
+        modelInput.setText(prefs.getProviderModel(prov).isEmpty() ? getDefaultModel(prov) : prefs.getProviderModel(prov));
+        lay.addView(modelInput);
+        modelInput.setTag(prov + "_model");
     }
 
     private String getApiKeyUrl(String prov) {
