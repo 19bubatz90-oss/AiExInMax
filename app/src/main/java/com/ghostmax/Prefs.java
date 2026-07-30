@@ -1,14 +1,28 @@
 package com.ghostmax;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
 public class Prefs {
-    private static final String FILE = "gg_max_prefs";
     private SharedPreferences sp;
-    public Prefs(Context ctx) { sp = ctx.getSharedPreferences(FILE, Context.MODE_PRIVATE); }
+    private boolean secureMode = false;
+
+    public Prefs(Context ctx) {
+        try {
+            sp = CryptoHelper.getEncryptedPrefs(ctx);
+        } catch (Exception e) {
+            sp = ctx.getSharedPreferences("ghostmax_fallback", Context.MODE_PRIVATE);
+        }
+    }
+
+    public void setSecureMode(boolean enabled) { this.secureMode = enabled; }
+    public boolean isSecureMode() { return secureMode; }
 
     public String getApiKey(String provider) { return sp.getString("key_" + provider, ""); }
     public void setApiKey(String provider, String key) { sp.edit().putString("key_" + provider, key).apply(); }
@@ -16,10 +30,8 @@ public class Prefs {
     public void setProviderUrl(String provider, String url) { sp.edit().putString("url_" + provider, url).apply(); }
     public String getProviderModel(String provider) { return sp.getString("model_" + provider, ""); }
     public void setProviderModel(String provider, String model) { sp.edit().putString("model_" + provider, model).apply(); }
-
     public String getHistory() { return sp.getString("chat_history", "[]"); }
-    public void saveHistory(String json) { sp.edit().putString("chat_history", json).apply(); }
-
+    public void saveHistory(String json) { if (!secureMode) sp.edit().putString("chat_history", json).apply(); }
     public double getTemperature() { return sp.getFloat("temperature", 0.7f); }
     public void setTemperature(double v) { sp.edit().putFloat("temperature", (float) v).apply(); }
     public int getMaxTokens() { return sp.getInt("max_tokens", 1024); }
@@ -54,7 +66,6 @@ public class Prefs {
     public void setAutoDeleteDays(int v) { sp.edit().putInt("auto_delete_days", v).apply(); }
     public String getPersonality() { return sp.getString("personality", "Freundlicher Assistent"); }
     public void setPersonality(String v) { sp.edit().putString("personality", v).apply(); }
-
     public String getCustomPersonalities() { return sp.getString("custom_personalities", "[]"); }
     public void saveCustomPersonalities(String json) { sp.edit().putString("custom_personalities", json).apply(); }
 
@@ -80,11 +91,26 @@ public class Prefs {
     }
     public void removeCustomProvider(String name) {
         List<CustomProvider> list = getCustomProviders();
-        list.removeIf(p -> p.name.equals(name));
+        list.removeIf(pr -> pr.name.equals(name));
         try {
             JSONArray arr = new JSONArray();
             for (CustomProvider cp : list) arr.put(cp.toJson());
             sp.edit().putString("custom_providers", arr.toString()).apply();
         } catch (JSONException ignored) {}
+    }
+
+    public JSONArray filterHistoryByAge(JSONArray arr, int maxAgeDays) {
+        if (maxAgeDays <= 0) return arr;
+        long now = System.currentTimeMillis();
+        long cutoff = now - (maxAgeDays * 24L * 60 * 60 * 1000);
+        JSONArray filtered = new JSONArray();
+        for (int i = 0; i < arr.length(); i++) {
+            try {
+                JSONObject obj = arr.getJSONObject(i);
+                long ts = obj.optLong("timestamp", now);
+                if (ts >= cutoff) filtered.put(obj);
+            } catch (JSONException ignored) {}
+        }
+        return filtered;
     }
 }

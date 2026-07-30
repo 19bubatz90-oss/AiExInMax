@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_settings" android:title="⚙️ Einstellungen" app:showAsAction="never"/>
+    <item android:id="@+id/action_add_provider" android:title="➕ Provider hinzufügen" app:showAsAction="never"/>
+    <item android:id="@+id/action_catalog" android:title="📚 KI-Katalog" app:showAsAction="never"/>
+    <item android:id="@+id/action_add_personality" android:title="🧠 Neue Persönlichkeit" app:showAsAction="never"/>
+    <item android:id="@+id/action_image" android:title="🖼️ Bildgenerierung" app:showAsAction="never"/>
+    <item android:id="@+id/action_server" android:title="🖥️ Lokalen Server umschalten" app:showAsAction="never"/>
+    <item android:id="@+id/action_secret" android:title="🕵️ Geheim-Modus" app:showAsAction="never"/>
+    <item android:id="@+id/action_clear" android:title="🗑️ Chat leeren" app:showAsAction="never"/>
+</menu>

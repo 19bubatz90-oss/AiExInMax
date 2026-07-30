@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "com.ghostmax.app-debug-33:/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "com.ghostmax.app-main-35:/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.ghostmax.app-debug-33:/layout_activity_main.xml.flat",
+        "source": "com.ghostmax.app-main-35:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.ghostmax.app-debug-33:/layout_item_message_system.xml.flat",
+        "source": "com.ghostmax.app-main-35:/layout/item_message_system.xml"
+    },
+    {
+        "merged": "com.ghostmax.app-debug-33:/menu_main_menu.xml.flat",
+        "source": "com.ghostmax.app-main-35:/menu/main_menu.xml"
+    },
+    {
+        "merged": "com.ghostmax.app-debug-33:/layout_item_message_user.xml.flat",
+        "source": "com.ghostmax.app-main-35:/layout/item_message_user.xml"
+    },
+    {
+        "merged": "com.ghostmax.app-debug-33:/layout_item_message_bot.xml.flat",
+        "source": "com.ghostmax.app-main-35:/layout/item_message_bot.xml"
+    }
+]
